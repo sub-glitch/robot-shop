@@ -1,0 +1,15 @@
+# Used by the OpenTelemetry Operator. Pods with the annotation
+#   instrumentation.opentelemetry.io/inject-nodejs: "robot-shop/robot-shop"
+# get the auto-instrumentation agent injected, with no code or image changes.
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: robot-shop
+  namespace: robot-shop
+spec:
+  exporter:
+    endpoint: http://otel-collector.monitoring.svc.cluster.local:4318
+  propagators: [tracecontext, baggage]
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1"

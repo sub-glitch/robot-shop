@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: robot-shop-slo
+  namespace: monitoring
+spec:
+  groups:
+    - name: robot-shop.sli
+      rules:
+        # SLI: fraction of successful probes in the last 5 minutes, per service
+        - record: sli:availability:ratio_5m
+          expr: avg by (service) (avg_over_time(probe_success{app="robot-shop"}[5m]))
+
+    - name: robot-shop.alerts
+      rules:
+        - alert: RobotShopAvailabilityLow
+          expr: sli:availability:ratio_5m < 0.90
+          for: 1m
+          labels:
+            severity: page
+          annotations:
+            summary: "Robot Shop {{ $labels.service }} availability is {{ $value | humanizePercentage }}"
+            description: "Synthetic probes for {{ $labels.service }} have been failing for over 1 minute. SLO is 99%."
+            runbook_url: "https://github.com/CHANGEME-username/robot-shop/blob/main/capstone2/docs/runbook.md"
+
+        - alert: RobotShopDeploymentUnavailable
+          expr: |
+            kube_deployment_status_replicas_available{namespace="robot-shop"}
+              < kube_deployment_spec_replicas{namespace="robot-shop"}
+          for: 2m
+          labels:
+            severity: page
+          annotations:
+            summary: "Deployment {{ $labels.deployment }} has missing replicas"
+            description: "{{ $labels.deployment }} has fewer available replicas than desired for 2 minutes."
+            runbook_url: "https://github.com/CHANGEME-username/robot-shop/blob/main/capstone2/docs/runbook.md"

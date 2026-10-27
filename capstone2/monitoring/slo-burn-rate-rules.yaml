@@ -1,0 +1,34 @@
+# STRETCH GOAL: burn-rate alerts for a 99% SLO (error budget = 0.01).
+# 14.4x burn over 1h (and 5m) uses 2% of a 30-day budget in an hour -> page.
+# 6x burn over 6h (and 30m) uses 5% in six hours -> ticket.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: robot-shop-burn-rate
+  namespace: monitoring
+spec:
+  groups:
+    - name: robot-shop.burn
+      rules:
+        - alert: RobotShopErrorBudgetFastBurn
+          expr: |
+            (1 - avg by (service) (avg_over_time(probe_success{app="robot-shop"}[1h]))) > (14.4 * 0.01)
+            and
+            (1 - avg by (service) (avg_over_time(probe_success{app="robot-shop"}[5m]))) > (14.4 * 0.01)
+          for: 2m
+          labels: { severity: page }
+          annotations:
+            summary: "Fast error-budget burn on {{ $labels.service }}"
+            description: "Burning the 30-day budget at more than 14.4x."
+            runbook_url: "https://github.com/CHANGEME-username/robot-shop/blob/main/capstone2/docs/runbook.md"
+        - alert: RobotShopErrorBudgetSlowBurn
+          expr: |
+            (1 - avg by (service) (avg_over_time(probe_success{app="robot-shop"}[6h]))) > (6 * 0.01)
+            and
+            (1 - avg by (service) (avg_over_time(probe_success{app="robot-shop"}[30m]))) > (6 * 0.01)
+          for: 15m
+          labels: { severity: warning }
+          annotations:
+            summary: "Slow error-budget burn on {{ $labels.service }}"
+            description: "Burning the 30-day budget at more than 6x."
+            runbook_url: "https://github.com/CHANGEME-username/robot-shop/blob/main/capstone2/docs/runbook.md"

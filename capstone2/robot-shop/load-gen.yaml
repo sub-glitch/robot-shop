@@ -1,0 +1,28 @@
+# Steady background traffic. Check the repo README for current env vars, and set the image tag to the
+# same version as the chart (grep -n "version" K8s/helm/values.yaml).
+# Keep NUM_CLIENTS low: t3 nodes are burstable and will throttle (or cost extra) under heavy sustained load.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-gen
+  namespace: robot-shop
+  labels: { app: load-gen }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: load-gen }
+  template:
+    metadata:
+      labels: { app: load-gen }
+    spec:
+      containers:
+        - name: load-gen
+          image: robotshop/rs-load:latest      # CHANGEME: pin to the chart's image version
+          env:
+            - { name: HOST, value: "http://web:8080/" }
+            - { name: NUM_CLIENTS, value: "2" }
+            - { name: SILENT, value: "1" }
+            # - { name: ERROR, value: "1" }    # uncomment to inject errors for testing alerts
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { memory: 384Mi }

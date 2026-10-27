@@ -1,0 +1,4 @@
+# Synthetic probes give a reliable availability SLI even if some services do not expose metrics.
+fullnameOverride: blackbox-exporter
+resources:
+  requests: { cpu: 20m, memory: 32Mi }

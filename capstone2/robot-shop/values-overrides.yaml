@@ -1,0 +1,6 @@
+# Use with:  helm install robot-shop ./K8s/helm -n robot-shop -f values-overrides.yaml
+# FIRST run:  grep -rn -i instana K8s/helm   and delete/blank every Instana reference you find
+# (the EUM key/URL, INSTANA_* env vars). Key names below are the usual ones; confirm in K8s/helm/values.yaml.
+eum:
+  key: ""
+  url: ""

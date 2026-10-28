@@ -1,6 +1,6 @@
 # Postmortem: Robot Shop Kubernetes Deployment Degradation
 
-**Date:** 2026-10-28 | **Authors:** Uleko Blessing Samuel | **Status:** Draft
+**Date:** 2026-10-28 | **Authors:** Uleko Blessing Samuel | **Status:** Final report — investigation incomplete
 **Severity:** Major (development environment) | **Duration:** Under investigation | **Error budget consumed:** Not measured
 
 ## Summary
@@ -23,6 +23,13 @@ During the capstone deployment, several Robot Shop dependencies and dependent se
 
 ## Detection
 The issue was found by inspecting Kubernetes pod status and container logs. Prometheus/Grafana installation did not complete, so automated alert detection was not verified.
+
+## Evidence and limitations
+- **Kubernetes:** Pod status inspection showed MySQL and RabbitMQ OOMKilled/CrashLoopBackOff states, with ratings and shipping unhealthy.
+- **Docker Compose:** The storefront returned HTTP 200 during the recorded check. This does not establish that every user journey worked.
+- **Monitoring:** The Helm repository request timed out, and the monitoring stack was not deployed successfully.
+- **Unverified:** Prometheus metrics, Grafana dashboard operation, searchable Loki logs, a Jaeger trace, and successful Slack alert delivery.
+- **Measurements unavailable:** Exact incident duration, failed-request count, and error-budget consumption were not recorded.
 
 ## Root cause
 The definitive root cause has not been established. Observed evidence includes OOMKilled/exit 137 for MySQL and RabbitMQ, failing readiness for ratings, and connection failures for shipping. The Helm repository request also timed out, preventing the planned monitoring stack installation.

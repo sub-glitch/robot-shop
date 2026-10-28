@@ -30,10 +30,10 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 1024Mi
+            memory: 1536Mi
           requests:
             cpu: 100m
-            memory: 700Mi
+            memory: 1Gi
       restartPolicy: Always
       {{- with .Values.mysql.affinity }}
       affinity:

@@ -1,6 +1,6 @@
 # SLO and Error Budget Policy: Robot Shop
 
-**Owner:** CHANGEME (your name) | **Reviewed:** CHANGEME date | **Review cadence:** every Wednesday catch-up
+**Owner:** Uleko Blessing Samuel | **Reviewed:** 2026-10-28 | **Review cadence:** every Wednesday catch-up
 
 ## Service and scope
 Robot Shop storefront. Critical user journeys: browse catalogue, add to cart, pay. Services in scope: `web`, `catalogue`, `cart`, `payment`.

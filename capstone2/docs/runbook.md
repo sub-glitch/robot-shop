@@ -23,7 +23,7 @@ Users cannot reliably use part of the shop. The synthetic probe for one service 
 | Dependencies | `kubectl get pods -n robot-shop` for mongodb, redis, mysql, rabbitmq |
 
 ## 4. Escalate
-If not mitigated within 15 minutes, or if data may be lost, escalate to CHANGEME (instructor / team lead).
+If not mitigated within 15 minutes, or if data may be lost, escalate to project instructor / team lead.
 
 ## 5. After the incident
 Write a blameless postmortem within 48 hours using `postmortem-template.md`. Update this runbook with anything that was missing.
